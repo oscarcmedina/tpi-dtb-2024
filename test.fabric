@@ -1,0 +1,133 @@
+[
+  // Consigna 1: Emitir certificado
+  // validaciones:
+  // a- permisos (instituciones tienen permiso administrador)
+  // (se debe agregar en la wallet al momento de levantar la red con debugger)
+  // b- fecha debe respetar el formato y no ser fecha futura
+  // Si lo ejecuta 2 veces no se lo permite porque son los mismos datos
+  {
+    "invoke": "emitirCertificado",
+    "identity": "administrador",
+    "args": [
+      "Juan Perez",
+      "12345678",
+      "Ingeniería de Sistemas",
+      "2022-05-10",
+      "Licenciatura",
+      "Ingeniero en Sistemas",
+      "Universidad Nacional"
+    ]
+  },
+  // ejemplo de validacion: fecha erronea
+  {
+    "invoke": "emitirCertificado",
+    "identity": "administrador",
+    "args": [
+      "María Lopez",
+      "87654321",
+      "Medicina",
+      "2021/12/20",
+      "Maestría",
+      "Doctora en Medicina",
+      "Universidad Médica"
+    ]
+  },
+  // Ejemplo de validacion: No tiene permisos
+  {
+    "invoke": "emitirCertificado",
+    "args": [
+      "Carlos Pérez",
+      "12121212",
+      "Filosofía",
+      "2020/10/15",
+      "Doctorado",
+      "Doctor en Filosofía",
+      "Universidad Nacional"
+    ]
+  },
+  // Ejemplo validacion: no recibir campos vacios
+  {
+    "invoke": "emitirCertificado",
+    "identity": "administrador",
+    "args": [
+      "Ricardo Hernández",
+      "",
+      "Electrónica",
+      "2016-02-20",
+      "Técnico",
+      "Técnico en Electrónica",
+      "Instituto Técnico"
+    ]
+  },
+  // Consigna 2: Verificar certificado
+  // Tomar el certificadoID del punto anterior y pegar
+  // Ejemplo certificado valido
+  {
+    "query": "verificarCertificado",
+    "args": ["26e4da0d6a14829721453ae10143ba3c70771a6e7079e4b269f8628b7c2aba9d"]
+  },
+  // Ejemplo certificado no encontrado
+  {
+    "query": "verificarCertificado",
+    "args": ["cef204f048811f865a47c7a9a66979ff0eb8dd67221dbc24fa1f433529d4bafe"]
+  },
+  // Consigna 3: obtener certificados estudiantes con dni
+  {
+    "query": "obtenerCertificadosPorEstudiante",
+    "args": ["12345678"]
+  },
+  // Consigna 4: renovar certificado
+  // validaciones:
+  // - que esten completo los campos
+  // - que este autorizado para remover certificados
+  {
+    "invoke": "revocarCertificado",
+    "identity": "administrador",
+    "args": [
+      "229de709c7c1a784629478d24f3e94c0a3c1c1351091d5773469a2beaa54fae6",
+      "Solicitud de revisión"
+    ]
+  },
+  // Ejemplo verificacion: campo motivo vacio
+  {
+    "invoke": "revocarCertificado",
+    "args": ["629478d24f3e94c0a3c1c1351091d5773469a2beaa54fae6", ""]
+  },
+  // Ejemplo verificacion: no tiene permisos para remover certificado
+  {
+    "invoke": "revocarCertificado",
+    "args": [
+      "26e4da0d6a14829721453ae10143ba3c7asdbvihbavsdkbs",
+      "Solicitud de revisión"
+    ]
+  },
+  // Consigna 5: Crear solicitud de verificacion
+  // para esto nos pide que el empleado este registrado asi que lo agregamos al ledger
+  {
+    "invoke": "registrarEmpleador",
+    "args": ["Google"]
+  },
+  // Para verificar que funciona
+  {
+    "invoke": "verificarEmpleadorPorNombre",
+    "args": ["Google"]
+  },
+  // Camino feliz de la solicitud
+  {
+    "invoke": "crearSolicitudVerificacion",
+    "args": [
+      "79ddd2565dcc26f15e5cfd819e3276a0890612ad8346901f3007da684f2cd1a5",
+      "Google",
+      "2024-11-08"
+    ]
+  },
+  // Da error porque la empresa no esta registrada
+  {
+    "invoke": "crearSolicitudVerificacion",
+    "args": [
+      "Cualquier id, verifica primero por empresa",
+      "Empresa Salud SA",
+      "2024-11-08"
+    ]
+  }
+]
